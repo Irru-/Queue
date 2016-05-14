@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mycompany.queuetester;
+package com.dockdocker.queuetester;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import net.greghaines.jesque.Config;
 import net.greghaines.jesque.ConfigBuilder;
-import net.greghaines.jesque.Job;
-import net.greghaines.jesque.client.Client;
-import net.greghaines.jesque.client.ClientImpl;
+
 import static net.greghaines.jesque.utils.JesqueUtils.entry;
 import static net.greghaines.jesque.utils.JesqueUtils.map;
 import net.greghaines.jesque.worker.MapBasedJobFactory;
@@ -51,9 +49,9 @@ public class QueueTest {
         
 //        final Job job = new Job("ToggleContainer",
 //          new Object[]{ "HELLO WORLD!" });
-//        final Client client = new ClientImpl(config);
-//        client.enqueue("foo", job);
-//        client.end();
+//        final Client Client = new ClientImpl(config);
+//        Client.enqueue("foo", job);
+//        Client.end();
 
         // Start a worker to run jobs from the queue
         final Worker worker = new WorkerImpl(config,
