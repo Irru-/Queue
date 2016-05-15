@@ -4,7 +4,9 @@ import com.dockdocker.agent.Interface.IClient;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.core.DockerClientBuilder;
+import com.google.gson.JsonObject;
 
+import java.io.*;
 import java.security.SecureRandom;
 import java.util.List;
 
@@ -37,21 +39,45 @@ public class DockerClientHandler implements
         this.containerId = id;
     }
 
+    @Override
+    public JsonObject request(String command) {
+        ProcessBuilder pb = new ProcessBuilder("curl", "--unix-socket", "/var/run/docker.sock", command);
+        try {
+            pb.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void startProcess(ProcessBuilder pb) {
+        try {
+            pb.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void start(String id) {
-//        docker.startContainerCmd(id).exec();
-        System.out.println("start");
+        ProcessBuilder pb = new ProcessBuilder("curl", "-X", "POST", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId + "/start");
+        startProcess(pb);
     }
 
     public void stop(String id) {
-        docker.stopContainerCmd(id).withTimeout(2).exec();
+        ProcessBuilder pb = new ProcessBuilder("curl", "-X", "POST", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId + "/stop");
+        startProcess(pb);
     }
 
     public void kill(String id) {
-        docker.killContainerCmd(id);
+        ProcessBuilder pb = new ProcessBuilder("curl", "-X", "POST", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId + "/kill");
+        startProcess(pb);
     }
 
     public void restart(String id) {
-        docker.restartContainerCmd(id).withtTimeout(2).exec();
+        ProcessBuilder pb = new ProcessBuilder("curl", "-X", "POST", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId + "/restart");
+        startProcess(pb);
     }
 
     public void create(String name) {
@@ -60,11 +86,13 @@ public class DockerClientHandler implements
     }
 
     public void remove(String id) {
-        docker.removeContainerCmd(id);
+        ProcessBuilder pb = new ProcessBuilder("curl", "-X", "DELETE", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId);
+        startProcess(pb);
     }
 
     public void rename(String id, String newName) {
-//        rename bestaat niet meer in library(?)
+        ProcessBuilder pb = new ProcessBuilder("curl", "-X", "POST", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId + "/rename?name" + newName);
+        startProcess(pb);
     }
 
     public void inspect(String id) {
@@ -84,35 +112,35 @@ public class DockerClientHandler implements
             case "STARTING":
                 start(containerId);
                 break;
-            case "stop":
+            case "STOP":
                 stop(containerId);
                 break;
-            case "kill":
+            case "KILL":
                 kill(containerId);
                 break;
-            case "restart":
+            case "RESTART":
                 restart(containerId);
                 break;
-            case "create":
+            case "CREATE":
                 create(containerId);
                 break;
-            case "remove":
+            case "REMOVE":
                 remove(containerId);
                 break;
-//            case "rename":
+//            case "RENAME":
 //                rename(containerId);
 //                break;
-            case "inspect":
+            case "INSPECT":
                 inspect(containerId);
                 break;
-            case "stats":
+            case "STATS":
                 stats();
                 break;
-            case "log":
+            case "LOG":
                 log(containerId);
                 break;
             default:
-                throw new IllegalArgumentException("Invalid command: " + command);
+                throw new IllegalArgumentException("Invalid command: " + command.toUpperCase());
         }
     }
 }

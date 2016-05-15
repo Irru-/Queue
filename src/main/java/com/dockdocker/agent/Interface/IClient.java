@@ -1,6 +1,7 @@
 package com.dockdocker.agent.Interface;
 
 import com.github.dockerjava.api.model.Container;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -8,6 +9,10 @@ import java.util.List;
  * Created by lars on 22-4-16.
  */
 public interface IClient {
+
+    JsonObject request(String command);
+
+    void startProcess(ProcessBuilder pb);
 
     void start(String id);
 
@@ -29,9 +34,9 @@ public interface IClient {
 
     void log(String id);
 
-    void getBuild();
-
     List<Container> getListContainers();
 
     void setContainerId(String id);
+
+    void getBuild();
 }
