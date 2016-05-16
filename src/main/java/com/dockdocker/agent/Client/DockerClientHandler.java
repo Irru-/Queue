@@ -62,11 +62,13 @@ public class DockerClientHandler implements
 
     public void start(String id) {
         ProcessBuilder pb = new ProcessBuilder("curl", "-X", "POST", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId + "/start");
+        System.out.println(id + " is starting..");
         startProcess(pb);
     }
 
     public void stop(String id) {
         ProcessBuilder pb = new ProcessBuilder("curl", "-X", "POST", "--unix-socket", "/var/run/docker.sock", "https:/containers/" + containerId + "/stop");
+        System.out.println(id + " is stopping..");
         startProcess(pb);
     }
 
