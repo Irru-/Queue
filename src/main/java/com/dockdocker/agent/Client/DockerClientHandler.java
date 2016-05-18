@@ -98,7 +98,7 @@ public class DockerClientHandler implements
     }
 
     public void inspect(String id) {
-        docker.inspectContainerCmd(id);
+
     }
 
     public void stats() {
@@ -106,7 +106,7 @@ public class DockerClientHandler implements
     }
 
     public void log(String id) {
-        docker.logContainerCmd(id);
+//        docker.logContainerCmd(id);
     }
 
     public void run() {
@@ -123,9 +123,9 @@ public class DockerClientHandler implements
             case "RESTART":
                 restart(containerId);
                 break;
-            case "CREATE":
-                create(containerId);
-                break;
+//            case "CREATE":
+//                create(containerId);
+//                break;
             case "REMOVE":
                 remove(containerId);
                 break;
